@@ -21,6 +21,12 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.products$ = this.productService.getProducts()
+    .pipe(
+      catchError(err => {
+        this.errorMessage = err;
+        return of([])
+      })
+    )
   }
 
   onAdd(): void {

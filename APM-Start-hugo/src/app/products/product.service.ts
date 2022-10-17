@@ -49,16 +49,22 @@ export class ProductService {
   private productSelectedsubject = new BehaviorSubject<number>(0);
   categorySelectedAction$ = this.productSelectedsubject.asObservable();
 
-  selectedProduct$ = this.productsWithCategory$
-      .pipe(
-        map(products =>
-          products.find(product => product.id === 5)
-        ),
-        tap(product => console.log('selectedProduct', product))
-      )
+  selectedProduct$ = combineLatest([
+    this.productsWithCategory$,
+    this.categorySelectedAction$
+  ]).pipe(
+    map(([products, selectedProductId]) => 
+    products.find(product => product.id === selectedProductId)
+    ),
+    tap(product => console.log('selectedProduct', product))
+  )
   
   constructor(private http: HttpClient, private productCategoryService: ProductCategoryService) { }
 
+  selectedProductChange(val: number):void {
+    this.productSelectedsubject.next(val);
+  }
+  
   private fakeProduct(): Product {
     return {
       id: 42,

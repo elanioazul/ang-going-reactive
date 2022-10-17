@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { catchError, Observable, tap, throwError, map, combineLatest } from 'rxjs';
+import { catchError, Observable, tap, throwError, map, combineLatest, BehaviorSubject } from 'rxjs';
 
 import { Product } from './product';
 import { ProductCategoryService } from '../product-categories/product-category.service';
@@ -45,6 +45,9 @@ export class ProductService {
       } as Product))
     ),
   );
+
+  private productSelectedsubject = new BehaviorSubject<number>(0);
+  categorySelectedAction$ = this.productSelectedsubject.asObservable();
 
   selectedProduct$ = this.productsWithCategory$
       .pipe(
